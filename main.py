@@ -1,6 +1,7 @@
 import re
 from nltk.corpus import stopwords
 from corus import load_lenta
+from nltk.stem import SnowballStemmer
 
 # from itertools import islice
 # import nltk
@@ -20,9 +21,12 @@ for data in data_iterator:
     data_title_lower = data.title.lower()
     data_topic_punctuation = re.sub(r'[^\w\s]', '', data_topic_lower) # Еще вариант составить список своих стоп слов
     data_title_punctuation = re.sub(r'[^\w\s]', '', data_title_lower) # и проводить сравнение с ним
-    data_title_stop_word = [word for word in data_title_punctuation.split() if word not in stopwords.words('russian')]
+    data_title_stop_words = list(word for word in data_title_punctuation.split() if word not in stopwords.words('russian'))
 
-    data_clear_list.append([data_topic_punctuation, data_title_stop_word])
+    snowball = SnowballStemmer(language='russian')
+    data_title_stem = list(map(snowball.stem, data_title_stop_words))
+    
+    data_clear_list.append([data_topic_punctuation, data_title_stem])
 
 print(f"len data list: {len(data_clear_list)}", *data_clear_list[:5], sep='\n') # печать списка в столбик. Еще вариант print('\n'.join(my_list))
 
