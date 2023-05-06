@@ -1,4 +1,5 @@
 import re
+import pandas
 from nltk.corpus import stopwords
 from corus import load_lenta
 from nltk.stem import SnowballStemmer
@@ -18,8 +19,6 @@ data_iterator = (next(records) for x in range(5)) # Данный вариант 
 
 # 2. Обработка данных.:
 data_clear_list = []
-data_topic_clear_list = []
-data_title_clear_list = []
 for data in data_iterator:
     data_topic_lower = data.topic.lower()
     data_title_lower = data.title.lower()
@@ -31,17 +30,15 @@ for data in data_iterator:
     data_title_stem = list(map(snowball.stem, data_title_stop_words))
     
 
-    data_clear_list.append([data_topic_punctuation, data_title_stop_words])
-    data_topic_clear_list.append(data_topic_punctuation)
-    data_title_clear_list.append(data_title_stop_words)
-
-
+    data_clear_list.append([data_topic_punctuation, " ".join(data_title_stop_words)]) # ...stop_words преобразован из списка в строку. str() не работает. Учесть, что "".join не преобразует тип int()
 print(f'len data_clear list: {len(data_clear_list)}', *data_clear_list[:5], sep='\n')
-# print(f'len data_topic list: {len(data_topic_clear_list)}', *data_topic_clear_list[:5], sep='\n')
-# print(f'len data_title list: {len(data_title_clear_list)}', *data_title_clear_list[:5], sep='\n')
+
+df = pandas.DataFrame(data_clear_list, columns=['topic', 'title'])
+print(df)
+
 
 # 1. Формирование обучающей выборки
-X_train, X_test, y_train, y_test = train_test_split(data_title_clear_list, data_topic_clear_list,
+X_train, X_test, y_train, y_test = train_test_split(df['title'], df['topic'],
                                                     train_size=0.67,
                                                     random_state=42)
 
@@ -52,6 +49,6 @@ print(f'len y_test: {len(y_test)}', *y_test[:5], sep='\n')
 
 
 # # 3. Векторизация документов: BOW
-# vectorizer_bow =
-# data_bow_vector =
-
+# vectorizer_bow = CountVectorizer()
+# X_train_bow_vector = vectorizer_bow.fit_transform(X_train)
+# print(X_train_bow_vector)
