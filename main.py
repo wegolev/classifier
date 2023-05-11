@@ -25,7 +25,7 @@ for data in data_iterator:
 
     snowball = SnowballStemmer(language='russian')
     data_title_stem = list(map(snowball.stem, data_title_stop_words))
-    
+
     data_clear_list.append([data_topic_punctuation, data_title_stem])
 
 print(f"len data list: {len(data_clear_list)}", *data_clear_list[:5], sep='\n') # печать списка в столбик. Еще вариант print('\n'.join(my_list))
