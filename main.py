@@ -61,7 +61,7 @@ print(f'len X_test: {len(X_test)}', *X_test[:5], sep='\n')
 print(f'len y_train: {len(y_train)}', *y_train[:5], sep='\n')
 print(f'len y_test: {len(y_test)}', *y_test[:5], sep='\n')
 
-# # 3. Векторизация документов: BOW
-# vectorizer_bow = CountVectorizer()
-# X_train_bow_vector = vectorizer_bow.fit_transform(X_train)
-# print(X_train_bow_vector)
+print(f'\nВекторизация документов: BOW\n')
+vectorizer_bow = CountVectorizer()
+X_train_bow_vector = vectorizer_bow.fit_transform(X_train)
+print(X_train_bow_vector)
