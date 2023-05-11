@@ -65,3 +65,5 @@ print(f'\nВекторизация документов: BOW\n')
 vectorizer_bow = CountVectorizer()
 X_train_bow_vector = vectorizer_bow.fit_transform(X_train)
 print(X_train_bow_vector)
+
+# qwer
