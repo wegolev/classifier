@@ -10,6 +10,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 # import nltk
 # nltk.download('stopwords')
 
+print(f'Импорт данных\n')
 path = 'data/lenta-ru-news.csv.gz'
 records = load_lenta(path)
 # Считать первые N строк:
@@ -17,7 +18,7 @@ data_iterator = (next(records) for x in range(5))  # Данный вариант
 # data = list(islice(records, 0, 100))
 # Файл не будет читаться полностью в отличие от варианта с file.readlines().
 
-# 2. Обработка данных.:
+print(f'\nОбработка данных\n')
 data_clear_list = []
 for data in data_iterator:
     data_topic_lower = data.topic.lower()
@@ -30,15 +31,28 @@ for data in data_iterator:
     snowball = SnowballStemmer(language='russian')
     data_title_stem = list(map(snowball.stem, data_title_stop_words))
 
-    data_clear_list.append([data_topic_punctuation, " ".join(
-        data_title_stop_words)])  # ...stop_words преобразован из списка в строку. str() не работает. Учесть, что "".join не преобразует тип int()
-print(f'len data_clear list: {len(data_clear_list)}', *data_clear_list[:5], sep='\n')
+    # ...stop_words преобразован из списка в строку. str() не работает.
+    # Учесть, что "".join не преобразует тип int()
+    data_clear_list.append([data_topic_punctuation, " ".join(data_title_stop_words)])
+
+# print(f'len data_clear list: {len(data_clear_list)}', *data_clear_list[:5], sep='\n')
 
 df = pandas.DataFrame(data_clear_list, columns=['topic', 'title'])
-print(df)
+# print(df.dtypes, df.head(), df['topic'].value_counts(), sep='\n\n')
 
-# 1. Формирование обучающей выборки
-X_train, X_test, y_train, y_test = train_test_split(df['title'], df['topic'],
+# print(f'\nПрисвоим метки для topic: Подход №1 - Найти и заменить https://clck.ru/34Nsh4 \n')
+# topic_cat = {"topic": {"россия": 1,  "мир": 2, "спорт": 3, "путешествия": 4}}
+# df = df.replace(topic_cat)
+# print(topic_cat, df.dtypes, df.head(), sep='\n\n')
+
+print(f'\nПрисвоим метки для topic: Подход № 2 - Кодирование метки https://clck.ru/34Nsh4 \n')
+df['topic'] = df['topic'].astype('category')
+# df['topic_cat'] = df['topic'].cat.codes
+df.insert(0, 'topic_cat', df['topic'].cat.codes)
+# print(df.dtypes, df.head(), sep='\n\n')
+
+print(f'\n1. Формирование обучающей и тестовой выборки\n')
+X_train, X_test, y_train, y_test = train_test_split(df['title'], df['topic_cat'],
                                                     train_size=0.67,
                                                     random_state=42)
 
