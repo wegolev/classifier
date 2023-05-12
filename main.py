@@ -5,6 +5,11 @@ from corus import load_lenta
 from nltk.stem import SnowballStemmer
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
+a = [[1, [4]], [2, 5], [3, 6]]
+
+print(*a, type(a))
+
+
 
 # from itertools import islice
 # import nltk
@@ -35,7 +40,7 @@ for data in data_iterator:
     # Учесть, что "".join не преобразует тип int()
     data_clear_list.append([data_topic_punctuation, " ".join(data_title_stop_words)])
 
-# print(f'len data_clear list: {len(data_clear_list)}', *data_clear_list[:5], sep='\n')
+print(f'len data_clear list: {len(data_clear_list)}', *data_clear_list[:5], sep='\n')
 
 df = pandas.DataFrame(data_clear_list, columns=['topic', 'title'])
 # print(df.dtypes, df.head(), df['topic'].value_counts(), sep='\n\n')
