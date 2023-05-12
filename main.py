@@ -28,14 +28,12 @@ for data in data_iterator:
 
     snowball = SnowballStemmer(language='russian')
     data_title_stem = list(map(snowball.stem, data_title_stop_words))
-    
 
     data_clear_list.append([data_topic_punctuation, " ".join(data_title_stop_words)]) # ...stop_words преобразован из списка в строку. str() не работает. Учесть, что "".join не преобразует тип int()
 print(f'len data_clear list: {len(data_clear_list)}', *data_clear_list[:5], sep='\n')
 
 df = pandas.DataFrame(data_clear_list, columns=['topic', 'title'])
 print(df)
-
 
 # 1. Формирование обучающей выборки
 X_train, X_test, y_train, y_test = train_test_split(df['title'], df['topic'],
@@ -47,8 +45,7 @@ print(f'len X_test: {len(X_test)}', *X_test[:5], sep='\n')
 print(f'len y_train: {len(y_train)}', *y_train[:5], sep='\n')
 print(f'len y_test: {len(y_test)}', *y_test[:5], sep='\n')
 
-
-# # 3. Векторизация документов: BOW
-# vectorizer_bow = CountVectorizer()
-# X_train_bow_vector = vectorizer_bow.fit_transform(X_train)
-# print(X_train_bow_vector)
+#3. Векторизация документов: BOW
+vectorizer_bow = CountVectorizer()
+X_train_bow_vector = vectorizer_bow.fit_transform(X_train)
+print(X_train_bow_vector)
